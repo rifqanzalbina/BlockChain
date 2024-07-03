@@ -1,5 +1,4 @@
 # BlockChain
-<<<<<<< HEAD
 **Cara tercepat untuk untuk belajar BlockChain adalah langsung dengan praktek**
 
 Kita akan coba praktek BlockChain dengan bahasa pemrograman yang paling mudah dan paling populer, yaitu Python.
