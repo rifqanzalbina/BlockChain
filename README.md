@@ -149,11 +149,11 @@ class Blockchain(object):
     
     def new_transaction(self, sender, recipient, amount):
         """
-        Creates a new transaction to go into the next mined Block
-        :param sender: <str> Address of the Sender
-        :param recipient: <str> Address of the Recipient
-        :param amount: <int> Amount
-        :return: <int> The index of the Block that will hold this transaction
+        Membuat transaksi baru untuk masuk ke blok tambang berikutnya
+        :param sender: <str> Alamat Pengirim
+        :param recipient: <str> Alamat Penerima
+        :param amount: <int> Jumlah
+        :return: <int> Indeks blok yang akan menampung transaksi ini
         """
 
         self.current_transactions.append({
@@ -183,15 +183,15 @@ class Blockchain(object):
         self.current_transactions = []
         self.chain = []
 
-        # Create the genesis block
+        # MemBuat Blok Genesis
         self.new_block(previous_hash=1, proof=100)
 
     def new_block(self, proof, previous_hash=None):
         """
-        Create a new Block in the Blockchain
-        :param proof: <int> The proof given by the Proof of Work algorithm
-        :param previous_hash: (Optional) <str> Hash of previous Block
-        :return: <dict> New Block
+        Buat blok baru di blockchain
+        :param proof: <int> Bukti yang diberikan oleh Bukti Algoritma Kerja
+        :param previous_hash: (Optional) <str> Hash dari blok sebelumnya
+        :return: <dict> Block baru
         """
 
         block = {
@@ -202,7 +202,7 @@ class Blockchain(object):
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
         }
 
-        # Reset the current list of transactions
+        # Menyetel ulang daftar transaksi saat ini
         self.current_transactions = []
 
         self.chain.append(block)
@@ -210,11 +210,11 @@ class Blockchain(object):
 
     def new_transaction(self, sender, recipient, amount):
         """
-        Creates a new transaction to go into the next mined Block
-        :param sender: <str> Address of the Sender
-        :param recipient: <str> Address of the Recipient
-        :param amount: <int> Amount
-        :return: <int> The index of the Block that will hold this transaction
+        Membuat transaksi baru untuk masuk ke blok tambang berikutnya
+        :param sender: <str> Alamat Pengirim
+        :param recipient: <str> Alamat Penerima
+        :param amount: <int> Jumlah
+        :return: <int> Indeks blok yang akan menampung transaksi ini
         """
         self.current_transactions.append({
             'sender': sender,
@@ -231,12 +231,12 @@ class Blockchain(object):
     @staticmethod
     def hash(block):
         """
-        Creates a SHA-256 hash of a Block
+        Membuat hash SHA-256 dari satu blok
         :param block: <dict> Block
         :return: <str>
         """
 
-        # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
+        # Kita harus memastikan bahwa kamus itu dipesan, atau kita akan memiliki hash yang tidak konsisten
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 ```
@@ -255,7 +255,7 @@ Mari kita putuskan bahwa hash dari beberapa integer x dikalikan dengan y lain ha
 ```python
 from hashlib import sha256
 x = 5
-y = 0  # We don't know what y should be yet...
+y = 0  #Kita belum tahu apa yang seharusnya ...
 while sha256(f'{x*y}'.encode()).hexdigest()[-1] != "0":
     y += 1
 print(f'The solution is y = {y}')
@@ -288,9 +288,9 @@ class Blockchain(object):
         
     def proof_of_work(self, last_proof):
         """
-        Simple Proof of Work Algorithm:
-         - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
-         - p is the previous proof, and p' is the new proof
+        Bukti sederhana dari algoritma kerja:
+         - Menemukan sebuah angka  p' such that hash (pp ') berisi 4 nol terkemuka, di mana p adalah p sebelumnya
+         - P adalah bukti sebelumnya, dan p 'adalah proo baruf
         :param last_proof: <int>
         :return: <int>
         """
@@ -304,10 +304,10 @@ class Blockchain(object):
     @staticmethod
     def valid_proof(last_proof, proof):
         """
-        Validates the Proof: Does hash(last_proof, proof) contain 4 leading zeroes?
-        :param last_proof: <int> Previous Proof
-        :param proof: <int> Current Proof
-        :return: <bool> True if correct, False if not.
+        Memvalidasi bukti: apakah hash (last_proof, bukti) berisi 4 nol terkemuka?
+        :param last_proof: <int> Bukti sebelumny
+        :param proof: <int> Bukti Setelahny
+        :return: <bool> Benar jika benar, salah jika tidak.
         """
 
         guess = f'{last_proof}{proof}'.encode()
@@ -321,6 +321,106 @@ Kelas kita hampir lengkap dan kita siap untuk mulai berinteraksi dengan itu meng
 
 ## Step 2: Blockhain sebagai sebuah API
 
+Kami akan membuat tiga metode:
+- /transaction/new : untuk membuat transaksi baru ke dalam blok
+- /mine : untuk memberi tahu server kita untuk menambang blok baru.
+- /chain : untuk mengembalikan nilai blockchain penuh
+
+### Menyetting Flask
+
+**"Server"** Kita akan membentuk satu node di jaringan blockchain ktia .Mari kita buat beberapa kode boilerplate
+
+```python
+import hashlib
+import json
+from textwrap import dedent
+from time import time
+from uuid import uuid4
+
+from flask import Flask
+
+
+class Blockchain(object):
+    ...
+
+
+# Instantiate our Node
+app = Flask(__name__)
+
+# Generate a globally unique address for this node
+node_identifier = str(uuid4()).replace('-', '')
+
+# Instantiate the Blockchain
+blockchain = Blockchain()
+
+
+@app.route('/mine', methods=['GET'])
+def mine():
+    return "We'll mine a new Block"
+  
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    return "We'll add a new transaction"
+
+@app.route('/chain', methods=['GET'])
+def full_chain():
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain),
+    }
+    return jsonify(response), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```
+Penjelasan singkat tentang apa yang telah kita tambahkan di atas:
+
+Baris 15: Instantiates Node Kita.
+Baris 18: Buat nama acak untuk simpul kita.
+Baris 21: instantiate 
+
+### Titik akhir transaksi
+
+Seperti inilah permintaan transaksi nantinya. Itu yang dikirim pengguna ke server:
+
+```json
+{
+ "sender": "my address",
+ "recipient": "someone else's address",
+ "amount": 5
+}
+```
+Karena kita sudah memiliki metode kelas kita untuk menambahkan transaksi ke blok, sisanya mudah.Mari kita tulis fungsi untuk menambahkan transaksi:
+
+```python
+import hashlib
+import json
+from textwrap import dedent
+from time import time
+from uuid import uuid4
+
+from flask import Flask, jsonify, request
+
+...
+
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    values = request.get_json()
+
+    # Check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+
+    # Create a new Transaction
+    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+
+    response = {'message': f'Transaction will be added to Block {index}'}
+    return jsonify(response), 201
+```
+*(A method for creating Transactions)*
+
+### Titik akhir penambangan
 
 </details>
 
