@@ -60,6 +60,7 @@ BlockChain adalah teknologi buku besar terdistribusi dan terdesentrallisasi yang
 
 </details>
 <br>
+
 # Let's Start !!
 <details>
 <summary>
