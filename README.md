@@ -59,9 +59,7 @@ BlockChain adalah teknologi buku besar terdistribusi dan terdesentrallisasi yang
 - [Kursus Blockchain di Coursera](https://www.coursera.org/courses?query=blockchain)
 
 </details>
-
 <br>
-
 # Let's Start !!
 <details>
 <summary>
@@ -82,7 +80,7 @@ Sebelum itu aku ingin kalian untuk menginstall beberapa library python terlebih 
 
 ```blockchain.py``` 
 
-### Representing a Blockchain
+### Perwakilan tentang Blockchain
 
 Kita akan membuat sebuah **Blockchain** class yang konstruktorny membuat daftar kosong awal (untuk menyimpan blockchain) dan kelas lainnya untuk menyimpan transaksi, 
 Ini adalah kodingan blueprint untuk class ``blockchain.py`` <br>
@@ -266,7 +264,7 @@ The solution here is ``y=21`` . Karena, hash yang diproduksi berakhir di 0:
 hash(5 * 21) = 1253e9373e...5e3600155e860
 ```
 
-Dalam Bitcoin, Algoritma Bukti Kerja disebut Hashcash.Dan itu tidak terlalu berbeda dari contoh dasar kami di atas.Ini adalah algoritma yang harus dipecahkan oleh penambang untuk membuat blok baru.Secara umum, kesulitan ditentukan oleh jumlah karakter yang dicari dalam string.Para penambang kemudian dihargai atas solusi mereka dengan menerima koin - dalam transaksi.
+Dalam Bitcoin, Algoritma Bukti Kerja disebut Hashcash. Dan itu tidak terlalu berbeda dari contoh dasar kita di atas. Ini adalah algoritma yang harus dipecahkan oleh penambang untuk membuat blok baru.Secara umum, kesulitan ditentukan oleh jumlah karakter yang dicari dalam string.Para penambang kemudian dihargai atas solusi mereka dengan menerima koin - dalam transaksi.
 
 Jaringan dapat dengan mudah memverifikasi solusinya.
 
@@ -289,8 +287,8 @@ class Blockchain(object):
     def proof_of_work(self, last_proof):
         """
         Bukti sederhana dari algoritma kerja:
-         - Menemukan sebuah angka  p' such that hash (pp ') berisi 4 nol terkemuka, di mana p adalah p sebelumnya
-         - P adalah bukti sebelumnya, dan p 'adalah proo baruf
+        - Menemukan sebuah angka  p' sedemikian rupa seperti (pp ') berisi 4 nol terkemuka, di mana p adalah p sebelumnya
+         - P adalah bukti sebelumnya, dan p' adalah proo baruf
         :param last_proof: <int>
         :return: <int>
         """
@@ -321,7 +319,7 @@ Kelas kita hampir lengkap dan kita siap untuk mulai berinteraksi dengan itu meng
 
 ## Step 2: Blockhain sebagai sebuah API
 
-Kami akan membuat tiga metode:
+Kita akan membuat tiga metode:
 - /transaction/new : untuk membuat transaksi baru ke dalam blok
 - /mine : untuk memberi tahu server kita untuk menambang blok baru.
 - /chain : untuk mengembalikan nilai blockchain penuh
@@ -421,6 +419,11 @@ def new_transaction():
 *(A method for creating Transactions)*
 
 ### Titik akhir penambangan
+Titik akhir pertambangan kita adalah tempat keajaiban terjadi.Dan itu mudah. Itu harus melakukan tiga hal:
+
+- Hitung bukti pekerjaan
+- Hadiah penambang (AS) dengan menambahkan transaksi yang memberi penambang 1 koin
+- Buat blok baru dengan menambahkannya ke rantai
 
 </details>
 
