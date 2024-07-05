@@ -166,12 +166,12 @@ class Blockchain(object):
 # Instantiate the node
 app = Flask(__name__)
 
-# Generate a globally unique address for this node
+# Hasilkan alamat unik global untuk node ini
 node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
 blockchain = Blockchain()
-
+ 
 @app.route('/mine', methods=['GET'])
 def mine():
     last_block = blockchain.last_block
@@ -223,13 +223,13 @@ def register_nodes():
     
     nodes = values.get('nodes')
     if nodes is None:
-        return "Error: Please supply a valid list of nodes", 400
+        return "Error : Harap berikan daftar node yang valid", 400
     
     for node in nodes:
         blockchain.register_node(node)
     
     response = {
-        'message': 'New nodes have been added',
+        'message': 'Node baru telah ditambahkan',
         'total_nodes': list(blockchain.nodes),
     }
     return jsonify(response), 201
@@ -240,12 +240,12 @@ def consensus():
     
     if replaced:
         response = {
-            'message': 'Our chain was replaced',
+            'message': 'Rantai Blockchain sudah terantai',
             'new_chain': blockchain.chain
         }
     else:
         response = {
-            'message': 'Our chain is authoritative',
+            'message': 'Rantai kami memiliki otoritas.',
             'chain': blockchain.chain
         }
     
@@ -260,3 +260,5 @@ if __name__ == '__main__':
     port = args.port
     
     app.run(host='0.0.0.0', port=port)
+
+
